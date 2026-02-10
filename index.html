@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Human Generator</title>
+    <style>
+        :root {
+            --color-bg-primary: #fcfcf9;
+            --color-bg-secondary: #fffffe;
+            --color-text-primary: #13343b;
+            --color-text-secondary: #626c71;
+            --color-primary: #21808d;
+            --color-primary-hover: #1d7480;
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-card: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg-primary: #1f2121;
+                --color-bg-secondary: #262828;
+                --color-text-primary: #f5f5f5;
+                --color-text-secondary: #a7a9a9;
+                --color-primary: #32b8c6;
+                --color-primary-hover: #2da6b2;
+                --color-border: rgba(119, 124, 124, 0.3);
+                --color-card: #262828;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            color: var(--color-primary);
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--color-primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.eliminate {
+            background: #c01530;
+        }
+
+        button.eliminate:hover {
+            background: #a01228;
+        }
+
+        .result-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .person-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            padding: 15px;
+            background: var(--color-bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .stats-section {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .stats-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--color-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+
+        .methodology {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        .methodology h3 {
+            color: var(--color-text-primary);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .charts-section {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--color-primary);
+            text-align: center;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+            width: 100%;
+            height: auto;
+            background: var(--color-bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .country-path {
+            fill: var(--color-bg-secondary);
+            stroke: var(--color-border);
+            stroke-width: 0.5;
+            transition: fill 0.3s;
+        }
+
+            width: 100%;
+            height: auto;
+        }
+
+        .pie-slice {
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .pie-slice:hover {
+            opacity: 0.8;
+        }
+
+        .bar {
+            transition: fill 0.3s;
+        }
+
+        .chart-label {
+            font-size: 12px;
+            fill: var(--color-text-primary);
+        }
+
+        .chart-value {
+            font-size: 11px;
+            fill: var(--color-text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .flag {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Random Human Generator</h1>
+        <p class="subtitle">Generates random people based on real demographic distributions</p>
+
+        <div class="controls">
+            <button onclick="generatePerson()">Generate Random Human</button>
+            <button onclick="generateMultiple(10)">Generate 10 People</button>
+            <button onclick="generateMultiple(100)">Generate 100 People</button>
+            <button onclick="generateMultiple(1000)">Generate 1,000 People</button>
+            <button onclick="generateMultiple(10000)">Generate 10,000 People</button>
+            <button onclick="generateMultiple(100000)">Generate 100,000 People</button>
+            <button onclick="generateMultiple(1000000)">Generate 1,000,000 People</button>
+            <button onclick="eliminateAll()" style="background: #c01530;">Eliminate All People</button>
+        </div>
+
+        <div id="result"></div>
+
+        <div class="stats-section" id="statsSection" style="display: none;">
+            <h2 class="stats-title">Generation Statistics</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+
+        <div class="charts-section" id="chartsSection" style="display: none;">
+            <div class="chart-container">
+                <h3 class="chart-title">Geographic Distribution</h3>
+                <svg id="worldMap" viewBox="0 0 960 500"></svg>
+            </div>
+            
+            <div class="charts-row">
+                <div class="chart-container">
+                    <h3 class="chart-title">Sex Distribution</h3>
+                    <svg id="sexChart" viewBox="0 0 300 300"></svg>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">Age Distribution</h3>
+                    <svg id="ageChart" viewBox="0 0 500 300"></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="methodology">
+            <h3>📊 Methodology</h3>
+            <p><strong>Population Weighting:</strong> Each country is weighted by its share of the global population (8.23 billion in 2026). India (17.8%) and China (17.2%) have the highest probability.</p>
+            <p><strong>Age Distribution:</strong> Uses realistic age pyramids for different demographic profiles. Developing nations have younger populations, while developed nations skew older.</p>
+            <p><strong>Sex Ratio:</strong> Global average is approximately 101 males per 100 females. Gulf states (Qatar: 246:100) have extreme male ratios due to migrant workers, while Eastern Europe and Russia have female majorities.</p>
+        </div>
+    </div>
+
+    <script>
+        const demographicData = {
+            countries: [
+                { name: 'India', pop: 1476625576, flag: '🇮🇳', sexRatio: 107.1, ageProfile: 'young' },
+                { name: 'China', pop: 1412914089, flag: '🇨🇳', sexRatio: 106.0, ageProfile: 'aging' },
+                { name: 'United States', pop: 349035494, flag: '🇺🇸', sexRatio: 98.3, ageProfile: 'mature' },
+                { name: 'Indonesia', pop: 287887000, flag: '🇮🇩', sexRatio: 101.4, ageProfile: 'young' },
+                { name: 'Pakistan', pop: 259300000, flag: '🇵🇰', sexRatio: 106.0, ageProfile: 'young' },
+                { name: 'Nigeria', pop: 242432000, flag: '🇳🇬', sexRatio: 102.0, ageProfile: 'very_young' },
+                { name: 'Brazil', pop: 213563000, flag: '🇧🇷', sexRatio: 97.0, ageProfile: 'mature' },
+                { name: 'Bangladesh', pop: 177274000, flag: '🇧🇩', sexRatio: 102.5, ageProfile: 'young' },
+                { name: 'Russia', pop: 143269000, flag: '🇷🇺', sexRatio: 86.3, ageProfile: 'aging' },
+                { name: 'Mexico', pop: 132998000, flag: '🇲🇽', sexRatio: 96.0, ageProfile: 'mature' },
+                { name: 'Japan', pop: 122428000, flag: '🇯🇵', sexRatio: 95.2, ageProfile: 'very_old' },
+                { name: 'Ethiopia', pop: 134555000, flag: '🇪🇹', sexRatio: 99.8, ageProfile: 'very_young' },
+                { name: 'Philippines', pop: 117724000, flag: '🇵🇭', sexRatio: 103.0, ageProfile: 'young' },
+                { name: 'Egypt', pop: 120101000, flag: '🇪🇬', sexRatio: 102.5, ageProfile: 'young' },
+                { name: 'Vietnam', pop: 102177000, flag: '🇻🇳', sexRatio: 99.5, ageProfile: 'mature' },
+                { name: 'DR Congo', pop: 116452000, flag: '🇨🇩', sexRatio: 98.7, ageProfile: 'very_young' },
+                { name: 'Turkey', pop: 86914000, flag: '🇹🇷', sexRatio: 100.5, ageProfile: 'mature' },
+                { name: 'Iran', pop: 90703000, flag: '🇮🇷', sexRatio: 103.0, ageProfile: 'mature' },
+                { name: 'Germany', pop: 83900000, flag: '🇩🇪', sexRatio: 97.5, ageProfile: 'old' },
+                { name: 'Thailand', pop: 71800000, flag: '🇹🇭', sexRatio: 98.0, ageProfile: 'aging' },
+                { name: 'England', pop: 57117000, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', sexRatio: 99.2, ageProfile: 'mature' },
+                { name: 'Scotland', pop: 5479000, flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', sexRatio: 97.8, ageProfile: 'mature' },
+                { name: 'Wales', pop: 3136000, flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', sexRatio: 98.5, ageProfile: 'mature' },
+                { name: 'Northern Ireland', pop: 1904000, flag: '🇬🇧', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'France', pop: 64756000, flag: '🇫🇷', sexRatio: 95.5, ageProfile: 'mature' },
+                { name: 'Italy', pop: 58870000, flag: '🇮🇹', sexRatio: 93.7, ageProfile: 'very_old' },
+                { name: 'South Africa', pop: 60142000, flag: '🇿🇦', sexRatio: 96.8, ageProfile: 'young' },
+                { name: 'Tanzania', pop: 67438000, flag: '🇹🇿', sexRatio: 98.5, ageProfile: 'very_young' },
+                { name: 'Myanmar', pop: 54180000, flag: '🇲🇲', sexRatio: 99.0, ageProfile: 'young' },
+                { name: 'South Korea', pop: 51712000, flag: '🇰🇷', sexRatio: 100.2, ageProfile: 'old' },
+                { name: 'Kenya', pop: 55100000, flag: '🇰🇪', sexRatio: 99.7, ageProfile: 'very_young' },
+                { name: 'Colombia', pop: 52085000, flag: '🇨🇴', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Spain', pop: 48435000, flag: '🇪🇸', sexRatio: 97.6, ageProfile: 'old' },
+                { name: 'Catalonia', pop: 7763000, flag: '🏴', sexRatio: 97.5, ageProfile: 'old' },
+                { name: 'Basque Country', pop: 2185000, flag: '🏴', sexRatio: 98.0, ageProfile: 'old' },
+                { name: 'Galicia', pop: 2700000, flag: '🏴', sexRatio: 95.0, ageProfile: 'old' },
+                { name: 'Argentina', pop: 46235000, flag: '🇦🇷', sexRatio: 97.2, ageProfile: 'mature' },
+                { name: 'Uganda', pop: 48583000, flag: '🇺🇬', sexRatio: 99.5, ageProfile: 'very_young' },
+                { name: 'Algeria', pop: 46841000, flag: '🇩🇿', sexRatio: 102.7, ageProfile: 'young' },
+                { name: 'Sudan', pop: 48109000, flag: '🇸🇩', sexRatio: 100.0, ageProfile: 'young' },
+                { name: 'Ukraine', pop: 36745000, flag: '🇺🇦', sexRatio: 86.0, ageProfile: 'aging' },
+                { name: 'Iraq', pop: 45504000, flag: '🇮🇶', sexRatio: 101.0, ageProfile: 'young' },
+                { name: 'Canada', pop: 39742000, flag: '🇨🇦', sexRatio: 98.8, ageProfile: 'mature' },
+                { name: 'Poland', pop: 41026000, flag: '🇵🇱', sexRatio: 94.0, ageProfile: 'aging' },
+                { name: 'Morocco', pop: 37841000, flag: '🇲🇦', sexRatio: 97.5, ageProfile: 'young' },
+                { name: 'Saudi Arabia', pop: 36948000, flag: '🇸🇦', sexRatio: 153.0, ageProfile: 'young' },
+                { name: 'Uzbekistan', pop: 36353000, flag: '🇺🇿', sexRatio: 99.0, ageProfile: 'young' },
+                { name: 'Afghanistan', pop: 42239000, flag: '🇦🇫', sexRatio: 103.5, ageProfile: 'very_young' },
+                { name: 'Peru', pop: 34352000, flag: '🇵🇪', sexRatio: 98.7, ageProfile: 'mature' },
+                { name: 'Angola', pop: 36684000, flag: '🇦🇴', sexRatio: 102.8, ageProfile: 'very_young' },
+                { name: 'Malaysia', pop: 34308000, flag: '🇲🇾', sexRatio: 103.0, ageProfile: 'young' },
+                { name: 'Mozambique', pop: 33897000, flag: '🇲🇿', sexRatio: 95.8, ageProfile: 'very_young' },
+                { name: 'Ghana', pop: 34121000, flag: '🇬🇭', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Yemen', pop: 34450000, flag: '🇾🇪', sexRatio: 101.5, ageProfile: 'young' },
+                { name: 'Nepal', pop: 30896000, flag: '🇳🇵', sexRatio: 96.0, ageProfile: 'young' },
+                { name: 'Venezuela', pop: 28302000, flag: '🇻🇪', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Madagascar', pop: 30325000, flag: '🇲🇬', sexRatio: 99.0, ageProfile: 'very_young' },
+                { name: 'Australia', pop: 26814000, flag: '🇦🇺', sexRatio: 99.2, ageProfile: 'mature' },
+                { name: 'North Korea', pop: 26160000, flag: '🇰🇵', sexRatio: 99.0, ageProfile: 'mature' },
+                { name: 'Cameroon', pop: 29322000, flag: '🇨🇲', sexRatio: 100.5, ageProfile: 'very_young' },
+                { name: 'Niger', pop: 27202000, flag: '🇳🇪', sexRatio: 103.0, ageProfile: 'very_young' },
+                { name: 'Taiwan', pop: 23113000, flag: '🇹🇼', sexRatio: 99.8, ageProfile: 'aging' },
+                { name: 'Syria', pop: 23228000, flag: '🇸🇾', sexRatio: 100.0, ageProfile: 'young' },
+                { name: 'Mali', pop: 23293000, flag: '🇲🇱', sexRatio: 99.0, ageProfile: 'very_young' },
+                { name: 'Burkina Faso', pop: 23251000, flag: '🇧🇫', sexRatio: 99.5, ageProfile: 'very_young' },
+                { name: 'Sri Lanka', pop: 21893000, flag: '🇱🇰', sexRatio: 96.5, ageProfile: 'mature' },
+                { name: 'Malawi', pop: 21280000, flag: '🇲🇼', sexRatio: 98.0, ageProfile: 'very_young' },
+                { name: 'Chile', pop: 19946000, flag: '🇨🇱', sexRatio: 97.0, ageProfile: 'mature' },
+                { name: 'Romania', pop: 19051000, flag: '🇷🇴', sexRatio: 95.0, ageProfile: 'aging' },
+                { name: 'Kazakhstan', pop: 21084000, flag: '🇰🇿', sexRatio: 95.5, ageProfile: 'mature' },
+                { name: 'Zambia', pop: 20570000, flag: '🇿🇲', sexRatio: 100.0, ageProfile: 'very_young' },
+                { name: 'Ecuador', pop: 18191000, flag: '🇪🇨', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Netherlands', pop: 17618000, flag: '🇳🇱', sexRatio: 99.0, ageProfile: 'mature' },
+                { name: 'Senegal', pop: 18276000, flag: '🇸🇳', sexRatio: 96.5, ageProfile: 'very_young' },
+                { name: 'Cambodia', pop: 16945000, flag: '🇰🇭', sexRatio: 95.5, ageProfile: 'young' },
+                { name: 'Chad', pop: 18279000, flag: '🇹🇩', sexRatio: 93.0, ageProfile: 'very_young' },
+                { name: 'Somalia', pop: 18143000, flag: '🇸🇴', sexRatio: 99.8, ageProfile: 'very_young' },
+                { name: 'Zimbabwe', pop: 16665000, flag: '🇿🇼', sexRatio: 93.0, ageProfile: 'young' },
+                { name: 'Guinea', pop: 14191000, flag: '🇬🇳', sexRatio: 99.7, ageProfile: 'very_young' },
+                { name: 'Rwanda', pop: 14094000, flag: '🇷🇼', sexRatio: 97.5, ageProfile: 'young' },
+                { name: 'Benin', pop: 13712000, flag: '🇧🇯', sexRatio: 98.0, ageProfile: 'very_young' },
+                { name: 'Tunisia', pop: 12458000, flag: '🇹🇳', sexRatio: 98.5, ageProfile: 'mature' },
+                { name: 'Belgium', pop: 11686000, flag: '🇧🇪', sexRatio: 98.8, ageProfile: 'mature' },
+                { name: 'Bolivia', pop: 12388000, flag: '🇧🇴', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Haiti', pop: 11724000, flag: '🇭🇹', sexRatio: 99.0, ageProfile: 'young' },
+                { name: 'Cuba', pop: 11194000, flag: '🇨🇺', sexRatio: 99.3, ageProfile: 'aging' },
+                { name: 'South Sudan', pop: 11088000, flag: '🇸🇸', sexRatio: 100.0, ageProfile: 'very_young' },
+                { name: 'Dominican Republic', pop: 11332000, flag: '🇩🇴', sexRatio: 98.5, ageProfile: 'young' },
+                { name: 'Czech Republic', pop: 10900000, flag: '🇨🇿', sexRatio: 97.5, ageProfile: 'mature' },
+                { name: 'Greece', pop: 10341000, flag: '🇬🇷', sexRatio: 96.0, ageProfile: 'old' },
+                { name: 'Jordan', pop: 11148000, flag: '🇯🇴', sexRatio: 104.0, ageProfile: 'young' },
+                { name: 'Portugal', pop: 10247000, flag: '🇵🇹', sexRatio: 95.0, ageProfile: 'old' },
+                { name: 'Azerbaijan', pop: 10412000, flag: '🇦🇿', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Sweden', pop: 10551000, flag: '🇸🇪', sexRatio: 100.5, ageProfile: 'mature' },
+                { name: 'Honduras', pop: 10593000, flag: '🇭🇳', sexRatio: 97.5, ageProfile: 'young' },
+                { name: 'United Arab Emirates', pop: 9516000, flag: '🇦🇪', sexRatio: 274.0, ageProfile: 'young' },
+                { name: 'Hungary', pop: 10156000, flag: '🇭🇺', sexRatio: 91.5, ageProfile: 'aging' },
+                { name: 'Tajikistan', pop: 10143000, flag: '🇹🇯', sexRatio: 99.0, ageProfile: 'young' },
+                { name: 'Belarus', pop: 9056000, flag: '🇧🇾', sexRatio: 87.0, ageProfile: 'aging' },
+                { name: 'Austria', pop: 9132000, flag: '🇦🇹', sexRatio: 97.5, ageProfile: 'mature' },
+                { name: 'Papua New Guinea', pop: 10329000, flag: '🇵🇬', sexRatio: 105.0, ageProfile: 'young' },
+                { name: 'Serbia', pop: 7149000, flag: '🇷🇸', sexRatio: 95.5, ageProfile: 'aging' },
+                { name: 'Israel', pop: 9842000, flag: '🇮🇱', sexRatio: 101.0, ageProfile: 'young' },
+                { name: 'Switzerland', pop: 8931000, flag: '🇨🇭', sexRatio: 98.5, ageProfile: 'mature' },
+                { name: 'Togo', pop: 9053000, flag: '🇹🇬', sexRatio: 98.5, ageProfile: 'very_young' },
+                { name: 'Sierra Leone', pop: 8791000, flag: '🇸🇱', sexRatio: 97.0, ageProfile: 'very_young' },
+                { name: 'Hong Kong', pop: 7396000, flag: '🇭🇰', sexRatio: 85.0, ageProfile: 'aging' },
+                { name: 'Laos', pop: 7889000, flag: '🇱🇦', sexRatio: 99.5, ageProfile: 'young' },
+                { name: 'Paraguay', pop: 7073000, flag: '🇵🇾', sexRatio: 100.0, ageProfile: 'young' },
+                { name: 'Bulgaria', pop: 6447000, flag: '🇧🇬', sexRatio: 94.5, ageProfile: 'old' },
+                { name: 'Libya', pop: 7075000, flag: '🇱🇾', sexRatio: 105.0, ageProfile: 'young' },
+                { name: 'Lebanon', pop: 5039000, flag: '🇱🇧', sexRatio: 96.0, ageProfile: 'mature' },
+                { name: 'Nicaragua', pop: 7284000, flag: '🇳🇮', sexRatio: 97.5, ageProfile: 'young' },
+                { name: 'Kyrgyzstan', pop: 7100000, flag: '🇰🇬', sexRatio: 96.0, ageProfile: 'young' },
+                { name: 'El Salvador', pop: 6441000, flag: '🇸🇻', sexRatio: 91.0, ageProfile: 'young' },
+                { name: 'Turkmenistan', pop: 6341000, flag: '🇹🇲', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Singapore', pop: 6108000, flag: '🇸🇬', sexRatio: 96.0, ageProfile: 'aging' },
+                { name: 'Denmark', pop: 6094000, flag: '🇩🇰', sexRatio: 99.0, ageProfile: 'mature' },
+                { name: 'Finland', pop: 5545000, flag: '🇫🇮', sexRatio: 97.5, ageProfile: 'mature' },
+                { name: 'Slovakia', pop: 5506000, flag: '🇸🇰', sexRatio: 94.5, ageProfile: 'mature' },
+                { name: 'Norway', pop: 5551000, flag: '🇳🇴', sexRatio: 100.5, ageProfile: 'mature' },
+                { name: 'Oman', pop: 4644000, flag: '🇴🇲', sexRatio: 166.0, ageProfile: 'young' },
+                { name: 'Palestine', pop: 5483000, flag: '🇵🇸', sexRatio: 103.0, ageProfile: 'young' },
+                { name: 'Costa Rica', pop: 5297000, flag: '🇨🇷', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Liberia', pop: 5418000, flag: '🇱🇷', sexRatio: 100.0, ageProfile: 'very_young' },
+                { name: 'Ireland', pop: 5136000, flag: '🇮🇪', sexRatio: 99.5, ageProfile: 'young' },
+                { name: 'New Zealand', pop: 5350000, flag: '🇳🇿', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Mauritania', pop: 5196000, flag: '🇲🇷', sexRatio: 99.0, ageProfile: 'young' },
+                { name: 'Panama', pop: 4468000, flag: '🇵🇦', sexRatio: 101.0, ageProfile: 'young' },
+                { name: 'Kuwait', pop: 4310000, flag: '🇰🇼', sexRatio: 157.0, ageProfile: 'young' },
+                { name: 'Croatia', pop: 4008000, flag: '🇭🇷', sexRatio: 93.5, ageProfile: 'old' },
+                { name: 'Moldova', pop: 3435000, flag: '🇲🇩', sexRatio: 91.0, ageProfile: 'aging' },
+                { name: 'Georgia', pop: 3728000, flag: '🇬🇪', sexRatio: 92.0, ageProfile: 'aging' },
+                { name: 'Eritrea', pop: 3748000, flag: '🇪🇷', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Uruguay', pop: 3383000, flag: '🇺🇾', sexRatio: 93.0, ageProfile: 'mature' },
+                { name: 'Bosnia and Herzegovina', pop: 3114000, flag: '🇧🇦', sexRatio: 95.0, ageProfile: 'aging' },
+                { name: 'Mongolia', pop: 3557000, flag: '🇲🇳', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Armenia', pop: 2777000, flag: '🇦🇲', sexRatio: 89.0, ageProfile: 'aging' },
+                { name: 'Jamaica', pop: 2828000, flag: '🇯🇲', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Qatar', pop: 3174000, flag: '🇶🇦', sexRatio: 246.0, ageProfile: 'young' },
+                { name: 'Albania', pop: 2761000, flag: '🇦🇱', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Puerto Rico', pop: 3223000, flag: '🇵🇷', sexRatio: 93.0, ageProfile: 'aging' },
+                { name: 'Lithuania', pop: 2801000, flag: '🇱🇹', sexRatio: 87.5, ageProfile: 'aging' },
+                { name: 'Namibia', pop: 3153000, flag: '🇳🇦', sexRatio: 96.0, ageProfile: 'young' },
+                { name: 'Gambia', pop: 2773000, flag: '🇬🇲', sexRatio: 98.0, ageProfile: 'very_young' },
+                { name: 'Botswana', pop: 2562000, flag: '🇧🇼', sexRatio: 95.0, ageProfile: 'young' },
+                { name: 'Gabon', pop: 2593000, flag: '🇬🇦', sexRatio: 99.0, ageProfile: 'young' },
+                { name: 'Lesotho', pop: 2363000, flag: '🇱🇸', sexRatio: 95.0, ageProfile: 'young' },
+                { name: 'Slovenia', pop: 2117000, flag: '🇸🇮', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'North Macedonia', pop: 1814000, flag: '🇲🇰', sexRatio: 98.5, ageProfile: 'mature' },
+                { name: 'Latvia', pop: 1854000, flag: '🇱🇻', sexRatio: 86.0, ageProfile: 'aging' },
+                { name: 'Bahrain', pop: 1643000, flag: '🇧🇭', sexRatio: 163.0, ageProfile: 'young' },
+                { name: 'Guinea-Bissau', pop: 2250000, flag: '🇬🇼', sexRatio: 95.0, ageProfile: 'very_young' },
+                { name: 'Trinidad and Tobago', pop: 1511000, flag: '🇹🇹', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Equatorial Guinea', pop: 1938000, flag: '🇬🇶', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Estonia', pop: 1344000, flag: '🇪🇪', sexRatio: 89.0, ageProfile: 'aging' },
+                { name: 'Timor-Leste', pop: 1419000, flag: '🇹🇱', sexRatio: 100.5, ageProfile: 'young' },
+                { name: 'Mauritius', pop: 1268000, flag: '🇲🇺', sexRatio: 98.0, ageProfile: 'mature' },
+                { name: 'Cyprus', pop: 1371000, flag: '🇨🇾', sexRatio: 100.0, ageProfile: 'mature' },
+                { name: 'Eswatini', pop: 1256000, flag: '🇸🇿', sexRatio: 93.0, ageProfile: 'young' },
+                { name: 'Djibouti', pop: 1184000, flag: '🇩🇯', sexRatio: 96.0, ageProfile: 'young' },
+                { name: 'Fiji', pop: 933000, flag: '🇫🇯', sexRatio: 106.0, ageProfile: 'young' },
+                { name: 'Réunion', pop: 882000, flag: '🇷🇪', sexRatio: 95.0, ageProfile: 'young' },
+                { name: 'Comoros', pop: 883000, flag: '🇰🇲', sexRatio: 97.0, ageProfile: 'very_young' },
+                { name: 'Guyana', pop: 836000, flag: '🇬🇾', sexRatio: 100.0, ageProfile: 'young' },
+                { name: 'Bhutan', pop: 797000, flag: '🇧🇹', sexRatio: 112.0, ageProfile: 'young' },
+                { name: 'Solomon Islands', pop: 839000, flag: '🇸🇧', sexRatio: 106.0, ageProfile: 'young' },
+                { name: 'Macao', pop: 722000, flag: '🇲🇴', sexRatio: 91.0, ageProfile: 'aging' },
+                { name: 'Luxembourg', pop: 680000, flag: '🇱🇺', sexRatio: 102.0, ageProfile: 'mature' },
+                { name: 'Suriname', pop: 640000, flag: '🇸🇷', sexRatio: 98.0, ageProfile: 'young' },
+                { name: 'Cabo Verde', pop: 527000, flag: '🇨🇻', sexRatio: 95.0, ageProfile: 'young' },
+                { name: 'Maldives', pop: 530000, flag: '🇲🇻', sexRatio: 162.0, ageProfile: 'young' },
+                { name: 'Malta', pop: 545000, flag: '🇲🇹', sexRatio: 99.0, ageProfile: 'mature' },
+                { name: 'Brunei', pop: 466000, flag: '🇧🇳', sexRatio: 103.0, ageProfile: 'young' },
+                { name: 'Belize', pop: 423000, flag: '🇧🇿', sexRatio: 102.0, ageProfile: 'young' },
+                { name: 'Bahamas', pop: 403000, flag: '🇧🇸', sexRatio: 96.0, ageProfile: 'young' },
+                { name: 'Iceland', pop: 398000, flag: '🇮🇸', sexRatio: 100.5, ageProfile: 'mature' },
+                { name: 'Vanuatu', pop: 335000, flag: '🇻🇺', sexRatio: 102.0, ageProfile: 'young' },
+                { name: 'Barbados', pop: 283000, flag: '🇧🇧', sexRatio: 93.0, ageProfile: 'mature' },
+                { name: 'Sao Tome and Principe', pop: 240000, flag: '🇸🇹', sexRatio: 100.0, ageProfile: 'young' },
+                { name: 'Samoa', pop: 219000, flag: '🇼🇸', sexRatio: 108.0, ageProfile: 'young' },
+                { name: 'Saint Lucia', pop: 180000, flag: '🇱🇨', sexRatio: 95.0, ageProfile: 'mature' }
+            ],
+            ageDistributions: {
+                very_young: [
+                    { range: '0-4', weight: 15 },
+                    { range: '5-9', weight: 14 },
+                    { range: '10-14', weight: 13 },
+                    { range: '15-19', weight: 11 },
+                    { range: '20-24', weight: 9 },
+                    { range: '25-29', weight: 8 },
+                    { range: '30-34', weight: 7 },
+                    { range: '35-39', weight: 6 },
+                    { range: '40-44', weight: 5 },
+                    { range: '45-49', weight: 4 },
+                    { range: '50-54', weight: 3 },
+                    { range: '55-59', weight: 2 },
+                    { range: '60-64', weight: 1.5 },
+                    { range: '65-69', weight: 0.7 },
+                    { range: '70-74', weight: 0.5 },
+                    { range: '75-79', weight: 0.2 },
+                    { range: '80+', weight: 0.1 }
+                ],
+                young: [
+                    { range: '0-4', weight: 10 },
+                    { range: '5-9', weight: 10 },
+                    { range: '10-14', weight: 10 },
+                    { range: '15-19', weight: 9 },
+                    { range: '20-24', weight: 9 },
+                    { range: '25-29', weight: 8 },
+                    { range: '30-34', weight: 7 },
+                    { range: '35-39', weight: 7 },
+                    { range: '40-44', weight: 6 },
+                    { range: '45-49', weight: 5 },
+                    { range: '50-54', weight: 5 },
+                    { range: '55-59', weight: 4 },
+                    { range: '60-64', weight: 3 },
+                    { range: '65-69', weight: 3 },
+                    { range: '70-74', weight: 2 },
+                    { range: '75-79', weight: 1.5 },
+                    { range: '80+', weight: 0.5 }
+                ],
+                mature: [
+                    { range: '0-4', weight: 5 },
+                    { range: '5-9', weight: 5 },
+                    { range: '10-14', weight: 5 },
+                    { range: '15-19', weight: 6 },
+                    { range: '20-24', weight: 7 },
+                    { range: '25-29', weight: 8 },
+                    { range: '30-34', weight: 8 },
+                    { range: '35-39', weight: 8 },
+                    { range: '40-44', weight: 8 },
+                    { range: '45-49', weight: 8 },
+                    { range: '50-54', weight: 7 },
+                    { range: '55-59', weight: 7 },
+                    { range: '60-64', weight: 6 },
+                    { range: '65-69', weight: 5 },
+                    { range: '70-74', weight: 4 },
+                    { range: '75-79', weight: 2 },
+                    { range: '80+', weight: 1 }
+                ],
+                aging: [
+                    { range: '0-4', weight: 4 },
+                    { range: '5-9', weight: 4 },
+                    { range: '10-14', weight: 4 },
+                    { range: '15-19', weight: 5 },
+                    { range: '20-24', weight: 5 },
+                    { range: '25-29', weight: 6 },
+                    { range: '30-34', weight: 6 },
+                    { range: '35-39', weight: 7 },
+                    { range: '40-44', weight: 8 },
+                    { range: '45-49', weight: 9 },
+                    { range: '50-54', weight: 9 },
+                    { range: '55-59', weight: 9 },
+                    { range: '60-64', weight: 8 },
+                    { range: '65-69', weight: 7 },
+                    { range: '70-74', weight: 5 },
+                    { range: '75-79', weight: 3 },
+                    { range: '80+', weight: 1 }
+                ],
+                old: [
+                    { range: '0-4', weight: 3 },
+                    { range: '5-9', weight: 3 },
+                    { range: '10-14', weight: 3 },
+                    { range: '15-19', weight: 4 },
+                    { range: '20-24', weight: 4 },
+                    { range: '25-29', weight: 5 },
+                    { range: '30-34', weight: 5 },
+                    { range: '35-39', weight: 6 },
+                    { range: '40-44', weight: 7 },
+                    { range: '45-49', weight: 8 },
+                    { range: '50-54', weight: 9 },
+                    { range: '55-59', weight: 9 },
+                    { range: '60-64', weight: 9 },
+                    { range: '65-69', weight: 8 },
+                    { range: '70-74', weight: 7 },
+                    { range: '75-79', weight: 5 },
+                    { range: '80+', weight: 4 }
+                ],
+                very_old: [
+                    { range: '0-4', weight: 2 },
+                    { range: '5-9', weight: 2 },
+                    { range: '10-14', weight: 3 },
+                    { range: '15-19', weight: 3 },
+                    { range: '20-24', weight: 4 },
+                    { range: '25-29', weight: 4 },
+                    { range: '30-34', weight: 5 },
+                    { range: '35-39', weight: 5 },
+                    { range: '40-44', weight: 6 },
+                    { range: '45-49', weight: 7 },
+                    { range: '50-54', weight: 8 },
+                    { range: '55-59', weight: 9 },
+                    { range: '60-64', weight: 10 },
+                    { range: '65-69', weight: 10 },
+                    { range: '70-74', weight: 9 },
+                    { range: '75-79', weight: 7 },
+                    { range: '80+', weight: 6 }
+                ]
+            }
+        };
+
+        const totalPopulation = demographicData.countries.reduce((sum, c) => sum + c.pop, 0);
+        const generationStats = {
+            total: 0,
+            countries: {},
+            ages: {},
+            sexes: { Male: 0, Female: 0 },
+            ageBins: {}
+        };
+
+        const countryCoordinates = {
+            'India': [78.9629, 20.5937], 'China': [104.1954, 35.8617], 'United States': [-95.7129, 37.0902],
+            'Indonesia': [113.9213, -0.7893], 'Pakistan': [69.3451, 30.3753], 'Nigeria': [8.6753, 9.0820],
+            'Brazil': [-51.9253, -14.2350], 'Bangladesh': [90.3563, 23.6850], 'Russia': [105.3188, 61.5240],
+            'Mexico': [-102.5528, 23.6345], 'Japan': [138.2529, 36.2048], 'Ethiopia': [40.4897, 9.1450],
+            'Philippines': [121.7740, 12.8797], 'Egypt': [30.8025, 26.8206], 'Vietnam': [108.2772, 14.0583],
+            'DR Congo': [21.7587, -4.0383], 'Turkey': [35.2433, 38.9637], 'Iran': [53.6880, 32.4279],
+            'Germany': [10.4515, 51.1657], 'Thailand': [100.9925, 15.8700],            'England': [-1.1743, 52.3555],
+            'Scotland': [-3.4360, 56.4907],
+            'Wales': [-3.7837, 52.1307],
+            'Northern Ireland': [-6.4923, 54.7877],
+            'France': [2.2137, 46.2276], 'Italy': [12.5674, 41.8719], 'South Africa': [22.9375, -30.5595],
+            'Tanzania': [34.8888, -6.3690], 'Myanmar': [95.9560, 21.9162], 'South Korea': [127.7669, 35.9078],
+            'Kenya': [37.9062, -0.0236],            'Colombia': [-74.2973, 4.5709],            'Spain': [-3.7492, 40.4637],
+            'Catalonia': [1.5209, 41.5912],
+            'Basque Country': [-2.6189, 42.9896],
+            'Galicia': [-8.5459, 42.5751],
+            'Argentina': [-63.6167, -38.4161], 'Uganda': [32.2903, 1.3733], 'Algeria': [1.6596, 28.0339],
+            'Sudan': [30.2176, 12.8628], 'Ukraine': [31.1656, 48.3794], 'Iraq': [43.6793, 33.2232],
+            'Canada': [-106.3468, 56.1304], 'Poland': [19.1451, 51.9194], 'Morocco': [-7.0926, 31.7917],
+            'Saudi Arabia': [45.0792, 23.8859], 'Uzbekistan': [64.5853, 41.3775], 'Afghanistan': [67.7100, 33.9391],
+            'Peru': [-75.0152, -9.1900], 'Angola': [17.8739, -11.2027], 'Malaysia': [101.9758, 4.2105],
+            'Mozambique': [35.5296, -18.6657], 'Ghana': [-1.0232, 7.9465], 'Yemen': [48.5164, 15.5527],
+            'Nepal': [84.1240, 28.3949], 'Venezuela': [-66.5897, 6.4238], 'Madagascar': [46.8691, -18.7669],
+            'Australia': [133.7751, -25.2744], 'North Korea': [127.5101, 40.3399], 'Cameroon': [12.3547, 7.3697],
+            'Niger': [8.0817, 17.6078], 'Taiwan': [120.9605, 23.6978], 'Syria': [38.9968, 34.8021],
+            'Mali': [-3.9962, 17.5707], 'Burkina Faso': [-1.5616, 12.2383], 'Sri Lanka': [80.7718, 7.8731],
+            'Malawi': [34.3015, -13.2543], 'Chile': [-71.5430, -35.6751], 'Romania': [24.9668, 45.9432],
+            'Kazakhstan': [66.9237, 48.0196], 'Zambia': [27.8493, -13.1339], 'Ecuador': [-78.1834, -1.8312],
+            'Netherlands': [5.2913, 52.1326], 'Senegal': [-14.4524, 14.4974], 'Cambodia': [104.9910, 12.5657],
+            'Chad': [18.7322, 15.4542], 'Somalia': [46.1996, 5.1521], 'Zimbabwe': [29.1549, -19.0154],
+            'Guinea': [-9.6966, 9.9456], 'Rwanda': [29.8739, -1.9403], 'Benin': [2.3158, 9.3077],
+            'Tunisia': [9.5375, 33.8869], 'Belgium': [4.4699, 50.5039], 'Bolivia': [-63.5887, -16.2902],
+            'Haiti': [-72.2852, 18.9712], 'Cuba': [-77.7812, 21.5218], 'South Sudan': [31.3070, 6.8770],
+            'Dominican Republic': [-70.1627, 18.7357], 'Czech Republic': [15.4730, 49.8175], 'Greece': [21.8243, 39.0742],
+            'Jordan': [36.2384, 30.5852], 'Portugal': [-8.2245, 39.3999], 'Azerbaijan': [47.5769, 40.1431],
+            'Sweden': [18.6435, 60.1282], 'Honduras': [-86.2419, 15.2000], 'United Arab Emirates': [53.8478, 23.4241],
+            'Hungary': [19.5033, 47.1625], 'Tajikistan': [71.2761, 38.8610], 'Belarus': [27.9534, 53.7098],
+            'Austria': [14.5501, 47.5162], 'Papua New Guinea': [143.9555, -6.3150], 'Serbia': [21.0059, 44.0165],
+            'Israel': [34.8516, 31.0461], 'Switzerland': [8.2275, 46.8182], 'Togo': [0.8248, 8.6195],
+            'Sierra Leone': [-11.7799, 8.4606], 'Hong Kong': [114.1095, 22.3193], 'Laos': [102.4955, 19.8563],
+            'Paraguay': [-58.4438, -23.4425], 'Bulgaria': [25.4858, 42.7339], 'Libya': [17.2283, 26.3351],
+            'Lebanon': [35.8623, 33.8547], 'Nicaragua': [-85.2072, 12.8654], 'Kyrgyzstan': [74.7661, 41.2044],
+            'El Salvador': [-88.8965, 13.7942], 'Turkmenistan': [59.5563, 38.9697], 'Singapore': [103.8198, 1.3521],
+            'Denmark': [9.5018, 56.2639], 'Finland': [25.7482, 61.9241], 'Slovakia': [19.6990, 48.6690],
+            'Norway': [8.4689, 60.4720], 'Oman': [55.9233, 21.4735], 'Palestine': [35.2332, 31.9522],
+            'Costa Rica': [-83.7534, 9.7489], 'Liberia': [-9.4295, 6.4281], 'Ireland': [-8.2439, 53.4129],
+            'New Zealand': [174.8860, -40.9006], 'Mauritania': [-10.9408, 21.0079], 'Panama': [-80.7821, 8.5380],
+            'Kuwait': [47.4818, 29.3117], 'Croatia': [15.2, 45.1], 'Moldova': [28.3699, 47.4116],
+            'Georgia': [43.3569, 42.3154], 'Eritrea': [39.7823, 15.1794], 'Uruguay': [-55.7658, -32.5228],
+            'Bosnia and Herzegovina': [17.6791, 43.9159], 'Mongolia': [103.8467, 46.8625], 'Armenia': [45.0382, 40.0691],
+            'Jamaica': [-77.2975, 18.1096], 'Qatar': [51.1839, 25.3548], 'Albania': [20.1683, 41.1533],
+            'Puerto Rico': [-66.5901, 18.2208], 'Lithuania': [23.8813, 55.1694], 'Namibia': [18.4904, -22.9576],
+            'Gambia': [-15.3101, 13.4432], 'Botswana': [24.6849, -22.3285], 'Gabon': [11.6094, -0.8037],
+            'Lesotho': [28.2336, -29.6100], 'Slovenia': [14.9955, 46.1512], 'North Macedonia': [21.7453, 41.6086],
+            'Latvia': [24.6032, 56.8796], 'Bahrain': [50.6371, 26.0667], 'Guinea-Bissau': [-15.1804, 11.8037],
+            'Trinidad and Tobago': [-61.2225, 10.6918], 'Equatorial Guinea': [10.2679, 1.6508], 'Estonia': [25.0136, 58.5953],
+            'Timor-Leste': [125.7275, -8.8742], 'Mauritius': [57.5522, -20.3484], 'Cyprus': [33.4299, 35.1264],
+            'Eswatini': [31.4659, -26.5225], 'Djibouti': [42.5903, 11.8251], 'Fiji': [179.4144, -17.7134],
+            'Réunion': [55.5364, -21.1151], 'Comoros': [43.8722, -11.6455], 'Guyana': [-58.9302, 4.8604],
+            'Bhutan': [90.4336, 27.5142], 'Solomon Islands': [160.1562, -9.6457], 'Macao': [113.5439, 22.1987],
+            'Luxembourg': [6.1296, 49.8153], 'Suriname': [-56.0278, 3.9193], 'Cabo Verde': [-24.0130, 16.5388],
+            'Maldives': [73.2207, 3.2028], 'Malta': [14.3754, 35.9375], 'Brunei': [114.7277, 4.5353],
+            'Belize': [-88.4976, 17.1899], 'Bahamas': [-77.3963, 25.0343], 'Iceland': [-19.0208, 64.9631],
+            'Vanuatu': [166.9592, -15.3767], 'Barbados': [-59.5432, 13.1939], 'Sao Tome and Principe': [6.6131, 0.1864],
+            'Samoa': [-172.1046, -13.7590], 'Saint Lucia': [-60.9789, 13.9094]
+        };
+
+        function weightedRandom(items, weightKey) {
+            const totalWeight = items.reduce((sum, item) => sum + item[weightKey], 0);
+            let random = Math.random() * totalWeight;
+            
+            for (let item of items) {
+                random -= item[weightKey];
+                if (random <= 0) {
+                    return item;
+                }
+            }
+            return items[items.length - 1];
+        }
+
+        function selectCountry() {
+            return weightedRandom(demographicData.countries, 'pop');
+        }
+
+        function selectAge(ageProfile) {
+            const distribution = demographicData.ageDistributions[ageProfile];
+            const ageGroup = weightedRandom(distribution, 'weight');
+            const [min, max] = ageGroup.range.split('-').map(s => s.replace('+', ''));
+            
+            if (ageGroup.range.includes('+')) {
+                return Math.floor(Math.random() * 20) + parseInt(min);
+            }
+            
+            return Math.floor(Math.random() * (parseInt(max) - parseInt(min) + 1)) + parseInt(min);
+        }
+
+        function selectSex(sexRatio) {
+            const maleProb = sexRatio / (100 + sexRatio);
+            return Math.random() < maleProb ? 'Male' : 'Female';
+        }
+
+        function generatePerson() {
+            const country = selectCountry();
+            const age = selectAge(country.ageProfile);
+            const sex = selectSex(country.sexRatio);
+            
+            generationStats.total++;
+            generationStats.countries[country.name] = (generationStats.countries[country.name] || 0) + 1;
+            
+            const ageGroup = age < 18 ? 'Child' : age < 60 ? 'Adult' : 'Senior';
+            generationStats.ages[ageGroup] = (generationStats.ages[ageGroup] || 0) + 1;
+            generationStats.sexes[sex]++;
+            
+            const ageBin = Math.floor(age / 10) * 10;
+            const ageBinLabel = `${ageBin}-${ageBin + 9}`;
+            generationStats.ageBins[ageBinLabel] = (generationStats.ageBins[ageBinLabel] || 0) + 1;
+            
+            displayPerson({ country, age, sex });
+            updateStats();
+        }
+
+        function displayPerson(person) {
+            let sexIcon;
+            if (person.age < 13) {
+                sexIcon = person.sex === 'Male' ? '👦' : '👧';
+            } else if (person.age < 20) {
+                sexIcon = person.sex === 'Male' ? '👨' : '👩';
+            } else if (person.age >= 60) {
+                sexIcon = person.sex === 'Male' ? '👴' : '👵';
+            } else {
+                sexIcon = person.sex === 'Male' ? '👨' : '👩';
+            }
+            
+            const ageCategory = person.age < 13 ? 'Child' : person.age < 20 ? 'Teen' : person.age < 60 ? 'Adult' : 'Senior';
+            
+            const html = `
+                <div class="result-card">
+                    <div class="person-icon">${sexIcon}</div>
+                    <div class="flag">${person.country.flag}</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Nationality</div>
+                            <div class="info-value">${person.country.name}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Age</div>
+                            <div class="info-value">${person.age} years</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Sex</div>
+                            <div class="info-value">${person.sex}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Category</div>
+                            <div class="info-value">${ageCategory}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('result').innerHTML = html;
+        }
+
+        function generateMultiple(count) {
+            for (let i = 0; i < count; i++) {
+                const country = selectCountry();
+                const age = selectAge(country.ageProfile);
+                const sex = selectSex(country.sexRatio);
+                
+                generationStats.total++;
+                generationStats.countries[country.name] = (generationStats.countries[country.name] || 0) + 1;
+                
+                const ageGroup = age < 18 ? 'Child' : age < 60 ? 'Adult' : 'Senior';
+                generationStats.ages[ageGroup] = (generationStats.ages[ageGroup] || 0) + 1;
+                generationStats.sexes[sex]++;
+                
+                const ageBin = Math.floor(age / 10) * 10;
+                const ageBinLabel = `${ageBin}-${ageBin + 9}`;
+                generationStats.ageBins[ageBinLabel] = (generationStats.ageBins[ageBinLabel] || 0) + 1;
+            }
+            
+            updateStats();
+        }
+
+        function eliminateAll() {
+            generationStats.total = 0;
+            generationStats.countries = {};
+            generationStats.ages = {};
+            generationStats.sexes = { Male: 0, Female: 0 };
+            generationStats.ageBins = {};
+            
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('statsSection').style.display = 'none';
+            document.getElementById('chartsSection').style.display = 'none';
+        }
+
+        function updateStats() {
+            const statsSection = document.getElementById('statsSection');
+            const statsGrid = document.getElementById('statsGrid');
+            const chartsSection = document.getElementById('chartsSection');
+            
+            statsSection.style.display = 'block';
+            chartsSection.style.display = 'block';
+            
+            const topCountries = Object.entries(generationStats.countries)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            const malePercent = ((generationStats.sexes.Male / generationStats.total) * 100).toFixed(1);
+            const femalePercent = ((generationStats.sexes.Female / generationStats.total) * 100).toFixed(1);
+            
+            statsGrid.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${generationStats.total}</div>
+                    <div class="stat-label">Total Generated</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${generationStats.sexes.Male}</div>
+                    <div class="stat-label">Males (${malePercent}%)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${generationStats.sexes.Female}</div>
+                    <div class="stat-label">Females (${femalePercent}%)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${topCountries.length > 0 ? topCountries[0][0] : 'N/A'}</div>
+                    <div class="stat-label">Most Common Country</div>
+                </div>
+            `;
+            
+            drawWorldMap();
+            drawSexPieChart();
+            drawAgeBarChart();
+        }
+
+        function drawWorldMap() {
+            const svg = document.getElementById('worldMap');
+            svg.innerHTML = '';
+            
+            const maxCount = Math.max(...Object.values(generationStats.countries), 1);
+            
+            // Simple Equirectangular projection - maps coordinates directly to pixels
+            const projection = (lon, lat) => {
+                // Equirectangular projection formula
+                // longitude range: -180 to 180 -> 0 to 960
+                // latitude range: 90 to -90 -> 0 to 500
+                
+                const x = ((lon + 180) / 360) * 960;
+                const y = ((90 - lat) / 180) * 500;
+                
+                return [x, y];
+            };
+            
+            // Draw background rectangle
+            const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            bg.setAttribute('x', '0');
+            bg.setAttribute('y', '0');
+            bg.setAttribute('width', '960');
+            bg.setAttribute('height', '500');
+            bg.setAttribute('fill', 'var(--color-bg-primary)');
+            bg.setAttribute('opacity', '0.5');
+            svg.appendChild(bg);
+            
+            // Draw world map using external SVG
+            const mapImage = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+            mapImage.setAttribute('href', 'https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg');
+            mapImage.setAttribute('x', '0');
+            mapImage.setAttribute('y', '0');
+            mapImage.setAttribute('width', '960');
+            mapImage.setAttribute('height', '500');
+            mapImage.setAttribute('opacity', '0.3');
+            mapImage.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+            svg.appendChild(mapImage);
+            
+            // Draw grid lines for reference
+            const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            gridGroup.setAttribute('opacity', '0.1');
+            gridGroup.setAttribute('stroke', 'var(--color-border)');
+            gridGroup.setAttribute('stroke-width', '0.5');
+            
+            // Vertical lines (longitude)
+            for (let lon = -180; lon <= 180; lon += 30) {
+                const [x] = projection(lon, 0);
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x);
+                line.setAttribute('y1', 0);
+                line.setAttribute('x2', x);
+                line.setAttribute('y2', 500);
+                gridGroup.appendChild(line);
+            }
+            
+            // Horizontal lines (latitude)
+            for (let lat = -90; lat <= 90; lat += 30) {
+                const [, y] = projection(0, lat);
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', 0);
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', 960);
+                line.setAttribute('y2', y);
+                gridGroup.appendChild(line);
+            }
+            
+            svg.appendChild(gridGroup);
+            
+            // Draw country points
+            for (const [countryName, count] of Object.entries(generationStats.countries)) {
+                const coords = countryCoordinates[countryName];
+                if (!coords) continue;
+                
+                const [x, y] = projection(coords[0], coords[1]);
+                const intensity = count / maxCount;
+                const radius = 3 + (intensity * 10);
+                
+                // Outer glow
+                const glow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                glow.setAttribute('cx', x);
+                glow.setAttribute('cy', y);
+                glow.setAttribute('r', radius + 3);
+                glow.setAttribute('fill', `rgba(33, 128, 141, ${0.2 * intensity})`);
+                svg.appendChild(glow);
+                
+                // Main circle
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', x);
+                circle.setAttribute('cy', y);
+                circle.setAttribute('r', radius);
+                circle.setAttribute('fill', `rgba(33, 128, 141, ${0.5 + intensity * 0.5})`);
+                circle.setAttribute('stroke', '#21808d');
+                circle.setAttribute('stroke-width', '2');
+                circle.style.cursor = 'pointer';
+                
+                const percentage = ((count / generationStats.total) * 100).toFixed(2);
+                const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                title.textContent = `${countryName}: ${count} (${percentage}%)`;
+                circle.appendChild(title);
+                
+                svg.appendChild(circle);
+            }
+        }
+
+        function drawSexPieChart() {
+            const svg = document.getElementById('sexChart');
+            svg.innerHTML = '';
+            
+            const total = generationStats.sexes.Male + generationStats.sexes.Female;
+            if (total === 0) return;
+            
+            const centerX = 150;
+            const centerY = 150;
+            const radius = 50;
+            
+            const malePercent = generationStats.sexes.Male / total;
+            const femalePercent = generationStats.sexes.Female / total;
+            
+            const maleAngle = malePercent * 2 * Math.PI;
+            
+            const malePath = describeArc(centerX, centerY, radius, 0, maleAngle);
+            const femalePath = describeArc(centerX, centerY, radius, maleAngle, 2 * Math.PI);
+            
+            const maleSector = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            maleSector.setAttribute('d', malePath);
+            maleSector.setAttribute('fill', '#21808d');
+            maleSector.classList.add('pie-slice');
+            
+            const maleSectorTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+            maleSectorTitle.textContent = `Male: ${generationStats.sexes.Male} (${(malePercent * 100).toFixed(1)}%)`;
+            maleSector.appendChild(maleSectorTitle);
+            
+            svg.appendChild(maleSector);
+            
+            const femaleSector = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            femaleSector.setAttribute('d', femalePath);
+            femaleSector.setAttribute('fill', '#e68161');
+            femaleSector.classList.add('pie-slice');
+            
+            const femaleSectorTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+            femaleSectorTitle.textContent = `Female: ${generationStats.sexes.Female} (${(femalePercent * 100).toFixed(1)}%)`;
+            femaleSector.appendChild(femaleSectorTitle);
+            
+            svg.appendChild(femaleSector);
+            
+            const maleLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            maleLabel.setAttribute('x', centerX);
+            maleLabel.setAttribute('y', centerY - 120);
+            maleLabel.setAttribute('text-anchor', 'middle');
+            maleLabel.classList.add('chart-label');
+            maleLabel.innerHTML = `<tspan fill="#21808d">■</tspan> Male: ${(malePercent * 100).toFixed(1)}%`;
+            svg.appendChild(maleLabel);
+            
+            const femaleLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            femaleLabel.setAttribute('x', centerX);
+            femaleLabel.setAttribute('y', centerY - 105);
+            femaleLabel.setAttribute('text-anchor', 'middle');
+            femaleLabel.classList.add('chart-label');
+            femaleLabel.innerHTML = `<tspan fill="#e68161">■</tspan> Female: ${(femalePercent * 100).toFixed(1)}%`;
+            svg.appendChild(femaleLabel);
+        }
+
+        function drawAgeBarChart() {
+            const svg = document.getElementById('ageChart');
+            svg.innerHTML = '';
+            
+            const ageBinOrder = ['0-9', '10-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-79', '80-89', '90-99'];
+            const data = ageBinOrder.map(bin => ({
+                label: bin,
+                count: generationStats.ageBins[bin] || 0
+            }));
+            
+            const maxCount = Math.max(...data.map(d => d.count), 1);
+            const barWidth = 40;
+            const barSpacing = 10;
+            const chartHeight = 220;
+            const chartTop = 40;
+            const chartLeft = 30;
+            
+            data.forEach((d, i) => {
+                const barHeight = (d.count / maxCount) * chartHeight;
+                const x = chartLeft + i * (barWidth + barSpacing);
+                const y = chartTop + chartHeight - barHeight;
+                
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', x);
+                rect.setAttribute('y', y);
+                rect.setAttribute('width', barWidth);
+                rect.setAttribute('height', barHeight);
+                rect.setAttribute('fill', '#21808d');
+                rect.classList.add('bar');
+                
+                const rectTitle = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                rectTitle.textContent = `${d.label}: ${d.count}`;
+                rect.appendChild(rectTitle);
+                
+                svg.appendChild(rect);
+                
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x + barWidth / 2);
+                label.setAttribute('y', chartTop + chartHeight + 15);
+                label.setAttribute('text-anchor', 'middle');
+                label.classList.add('chart-value');
+                label.textContent = d.label;
+                svg.appendChild(label);
+                
+                if (d.count > 0) {
+                    const countLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    countLabel.setAttribute('x', x + barWidth / 2);
+                    countLabel.setAttribute('y', y - 5);
+                    countLabel.setAttribute('text-anchor', 'middle');
+                    countLabel.classList.add('chart-value');
+                    countLabel.textContent = d.count;
+                    svg.appendChild(countLabel);
+                }
+            });
+            
+            const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            title.setAttribute('x', 250);
+            title.setAttribute('y', 20);
+            title.setAttribute('text-anchor', 'middle');
+            title.classList.add('chart-label');
+            title.textContent = 'Age Groups (10-year bins)';
+            svg.appendChild(title);
+        }
+
+        function describeArc(x, y, radius, startAngle, endAngle) {
+            const start = polarToCartesian(x, y, radius, endAngle);
+            const end = polarToCartesian(x, y, radius, startAngle);
+            const largeArcFlag = endAngle - startAngle <= Math.PI ? '0' : '1';
+            
+            return [
+                'M', x, y,
+                'L', start.x, start.y,
+                'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y,
+                'Z'
+            ].join(' ');
+        }
+
+        function polarToCartesian(centerX, centerY, radius, angleInRadians) {
+            return {
+                x: centerX + (radius * Math.cos(angleInRadians - Math.PI / 2)),
+                y: centerY + (radius * Math.sin(angleInRadians - Math.PI / 2))
+            };
+        }
+
+        window.onload = function() {
+            generatePerson();
+        };
+    </script>
+</body>
+</html>
